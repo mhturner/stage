@@ -96,6 +96,61 @@ classdef MatrixStack < handle
             obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * p;
         end
         
+        function flyPerspective(obj,screenDim)
+            w = screenDim(1); h = screenDim(2);
+            pa = [-w/2, -h/2, w/2]; % lower left
+            pb = [ w/2, -h/2, w/2]; % lower right
+            pc = [-w/2, h/2, w/2]; % upper left
+
+            % determine screen unit vectors
+            vr = (pb - pa) ./ norm(pb - pa);
+            vu = (pc - pa) ./ norm(pc - pa);
+
+            vn = cross(vr,vu);
+            vn = vn ./ norm(vn);
+
+            % Rotation matrix
+            R = [vr(1), vu(1), vn(1), 0;
+                 vr(2), vu(2), vn(2), 0;
+                 vr(3), vu(3), vn(3), 0;
+                 0, 0, 0, 1];
+
+            pe = [0, 0, 0]; %fly location
+            n=0.1; %near
+            f=10000; %far
+
+            % Determine frustum extents
+            va = pa - pe;
+            vb = pb - pe;
+            vc = pc - pe;
+
+            % Determine distance to screen
+            d = -dot(vn, va);
+
+            % Compute screen coordinates
+            l = dot(vr, va) * n/d;
+            r = dot(vr, vb) * n/d;
+            b = dot(vu, va) * n/d;
+            t = dot(vu, vc) * n/d;
+
+            % Projection matrix
+            P = [2*n/(r-l), 0, (r+l)/(r-l), 0;
+                 0, (2.0*n)/(t-b), (t+b)/(t-b), 0;
+                 0, 0, -(f+n)/(f-n), -(2.0*f*n)/(f-n);
+                 0, 0, -1, 0];
+
+            % Translation matrix
+            T = [1, 0, 0, -pe(1);
+                 0, 1, 0, -pe(2);
+                 0, 0, 1, -pe(3);
+                 0, 0, 0, 1];
+            
+            
+            projMatrix = P * R * T;
+                    
+            obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * projMatrix;
+        end
+        
         function setMatrix(obj, m)
             obj.stack(:,:,obj.depth) = m;
         end
