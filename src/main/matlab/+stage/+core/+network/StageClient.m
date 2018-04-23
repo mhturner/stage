@@ -56,6 +56,12 @@ classdef StageClient < handle
             obj.sendReceive(e);
         end
         
+        function setCanvasProjectionFlyPerspective(obj, width, height)
+            % Sets the remote canvas projection orthographic.
+            e = netbox.NetEvent('setCanvasProjectionFlyPerspective', {width, height});
+            obj.sendReceive(e);
+        end
+
         function resetCanvasProjection(obj)
             % Resets the remote canvas projection matrix.
             e = netbox.NetEvent('resetCanvasProjection');

@@ -30,6 +30,10 @@ classdef StagePreview < symphonyui.core.ProtocolPreview
         function createUi(obj)
             window = stage.core.Window(obj.windowSize, false, stage.core.Monitor(1), 'Visible', GL.FALSE);
             obj.canvas = stage.core.Canvas(window, 'DisableDwm', false);
+            %fly perspective projection
+            projection = stage.core.gl.MatrixStack();
+            projection.flyPerspective(obj.windowSize);
+            obj.canvas.setProjection(projection); %set perspective 
             obj.axes = axes( ...
                 'Parent', obj.panel, ...
                 'Position', [0 0 1 1], ...

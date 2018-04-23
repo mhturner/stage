@@ -49,7 +49,7 @@ classdef StageServer < handle
             
             %fly perspective projection
             projection = stage.core.gl.MatrixStack();
-            projection.flyPerspective(windowSize);
+            projection.flyPerspective(size);
             obj.canvas.setProjection(projection); %set perspective 
             
             obj.canvas.clear();
@@ -106,6 +106,8 @@ classdef StageServer < handle
                         obj.onEventSetCanvasProjectionTranslate(connection, event);                        
                     case 'setCanvasProjectionOrthographic'
                         obj.onEventSetCanvasProjectionOrthographic(connection, event);
+                    case 'setCanvasProjectionFlyPerspective'
+                        obj.onEventSetCanvasProjectionFlyPerspective(connection, event);
                     case 'resetCanvasProjection'
                         obj.onEventResetCanvasProjection(connection, event);
                     case 'setCanvasRenderer'
@@ -164,6 +166,14 @@ classdef StageServer < handle
             top = event.arguments{4};
             
             obj.canvas.projection.orthographic(left, right, bottom, top);
+            connection.sendEvent(netbox.NetEvent('ok'));
+        end
+        
+        function onEventSetCanvasProjectionFlyPerspective(obj, connection, event)
+            width = event.arguments{1};
+            height = event.arguments{2};
+            
+            obj.canvas.projection.flyPerspective([width height]);
             connection.sendEvent(netbox.NetEvent('ok'));
         end
         
