@@ -46,12 +46,7 @@ classdef StageServer < handle
             
             window = stage.core.Window(size, fullscreen, monitor);
             obj.canvas = stage.core.Canvas(window, 'disableDwm', ip.Results.disableDwm);
-            
-            %fly perspective projection
-            projection = stage.core.gl.MatrixStack();
-            projection.flyPerspective(size);
-            obj.canvas.setProjection(projection); %set perspective 
-            
+
             obj.canvas.clear();
             obj.canvas.window.flip();
             
