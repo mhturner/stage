@@ -44,12 +44,6 @@ classdef StageClient < handle
             obj.sendReceive(e);
         end
         
-        function setCanvasProjectionTranslate(obj, x, y, z)
-            % Translates the remote canvas projection
-            e = netbox.NetEvent('setCanvasProjectionTranslate', {x, y, z});
-            obj.sendReceive(e);
-        end
-        
         function setCanvasProjectionOrthographic(obj, left, right, bottom, top)
             % Sets the remote canvas projection orthographic.
             e = netbox.NetEvent('setCanvasProjectionOrthographic', {left, right, bottom, top});

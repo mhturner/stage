@@ -97,10 +97,14 @@ classdef MatrixStack < handle
         end
         
         function flyPerspective(obj,screenDim)
+            % ref: http://csc.lsu.edu/~kooima/articles/genperspective/
             w = screenDim(1); h = screenDim(2);
+            
             pa = [-w/2, -h/2, w/2]; % lower left
             pb = [ w/2, -h/2, w/2]; % lower right
             pc = [-w/2, h/2, w/2]; % upper left
+            
+            pe = [0, 0, 0]; %fly location
 
             % determine screen unit vectors
             vr = (pb - pa) ./ norm(pb - pa);
@@ -115,7 +119,7 @@ classdef MatrixStack < handle
                  vr(3), vu(3), vn(3), 0;
                  0, 0, 0, 1];
 
-            pe = [0, 0, 0]; %fly location
+            % Clipping planes
             n=0.1; %near
             f=10000; %far
 
@@ -146,7 +150,7 @@ classdef MatrixStack < handle
                  0, 0, 0, 1];
             
             
-            projMatrix = P * R * T;
+            projMatrix = P * R' * T;
                     
             obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * projMatrix;
         end
