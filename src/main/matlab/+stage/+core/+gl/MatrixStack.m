@@ -98,11 +98,18 @@ classdef MatrixStack < handle
         
         function flyPerspective(obj,screenDim)
             % ref: http://csc.lsu.edu/~kooima/articles/genperspective/
-            w = screenDim(1); h = screenDim(2);
+%             w = screenDim(1); h = screenDim(2);
+            w = 13.5; h = 16.87; %cm of image at projection plane, screen only shows 9x9 of this
             
-            pa = [-w/2, -h/2, w/2]; % lower left
-            pb = [ w/2, -h/2, w/2]; % lower right
-            pc = [-w/2, h/2, w/2]; % upper left
+            zDistToScreen = 5.36; %cm
+            
+            pa = [-w/2, -h, -zDistToScreen]; % lower left
+            pb = [ w/2, -h, -zDistToScreen]; % lower right
+            pc = [-w/2, 0, -zDistToScreen]; % upper left
+            
+%             pa = [-w/2, -h/2, -w/2]; % lower left
+%             pb = [ w/2, -h/2, -w/2]; % lower right
+%             pc = [-w/2, h/2, -w/2]; % upper left
             
             pe = [0, 0, 0]; %fly location
 
