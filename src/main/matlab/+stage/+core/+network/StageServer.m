@@ -217,6 +217,13 @@ classdef StageServer < handle
             % Unlock client to allow async operations during play.
             connection.sendEvent(netbox.NetEvent('ok'));
             
+            % Initialize NIDAQ USB
+            s = daq.createSession('ni');
+            % Send START Trigger Through NIDAQ to Bruker
+            addCounterOutputChannel(s,'Dev1', 0,'PulseGeneration');
+            s.startForeground();
+            release(s);
+
             try
                 info = player.play(obj.canvas);
             catch x
