@@ -70,7 +70,9 @@ classdef Canvas < handle
         function setClearColor(obj, color)
             obj.makeCurrent();
 
-            c = color;
+            % TODO: clean this up later. Bg has to be done differently
+            % with clandinin lab 3D objects
+            c = 0;
             if length(c) == 1
                 c = [c, c, c, 1];
             elseif length(c) == 3
