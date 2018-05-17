@@ -50,6 +50,20 @@ classdef MatrixStack < handle
             obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * r;
         end
         
+        function rotateAroundAxis(obj, azimuth, elevation, angle)
+            [x,y,z] = sph2cart(deg2rad(azimuth), deg2rad(elevation),1);
+            u = [x, y, z]';
+            uCross = [0, -z, y;
+                      z, 0, -x;
+                      -y, x, 0];
+            
+            r = cosd(angle) * eye(3) + sind(angle) * uCross + (1-cosd(angle)) * ((u)*u');
+            r(4,:) = 0;
+            r(:,4) = [0 0 0 1]';
+
+            obj.stack(:,:,obj.depth) = obj.stack(:,:,obj.depth) * r;
+        end
+        
         function scale(obj, x, y, z)
             s = [x 0 0 0;
                  0 y 0 0;
